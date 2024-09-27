@@ -1,46 +1,34 @@
 def solution(friends, gifts):
-    num_friend = len(friends)
-    gift_list=[
-        [0 for _ in range(num_friend)] for _ in range(num_friend)
-    ]
-    name_index = {}
-    count = 0
-    for friend in friends:
-        name_index[friend] = count
-        count += 1
-        
-    for gift in gifts:
-        gift = gift.split()
-        give = name_index[gift[0]]
-        receive = name_index[gift[1]]
-        gift_list[give][receive] += 1
-        
-    #선물지수 카운트
-    gift_num = [0]*num_friend
-    for i in range(num_friend):
-        for k in range(num_friend):
-            gift_num[i] += gift_list[i][k]
-            gift_num[i] -= gift_list[k][i]
+    n = len(friends)
+    # 친구 간 선물 준 기록
+    gift_count = {friend: {other: 0 for other in friends} for friend in friends}
     
-    #선물을 카운트
-    result = [0]*num_friend
-    for a in range(num_friend):
-        for b in range(a+1, num_friend):
-            """
-            if a == b:
-                break
-            else:
-            """
-            num = gift_list[a][b] - gift_list[b][a]
-            if num == 0:
-                if gift_num[a] > gift_num[b]:
-                    result[a] += 1
-                elif gift_num[a] < gift_num[b]:
-                    result[b] += 1 
-            elif num > 0:
+    # 기록 넣기
+    for gift in gifts:
+        giver, receiver = gift.split()
+        gift_count[giver][receiver] += 1
+        
+    # 선물지수 계산
+    gift_index = {me: sum(gift_count[me].values()) - sum(gift_count[other][me] for other in friends) for me in friends}
+    
+    result = {friend: 0 for friend in friends}
+    
+    # 선물 주고받기 생각
+    for q in range(n):
+        for p in range(q+1, n):
+            a = friends[q]
+            b = friends[p]
+            
+            if gift_count[a][b] > gift_count[b][a]:
                 result[a] += 1
-            else:
+            elif gift_count[a][b] < gift_count[b][a]:
                 result[b] += 1
-                    
-    answer = max(result)
+            else:
+                if gift_index[a] > gift_index[b]:
+                     result[a] += 1
+                elif gift_index[a] < gift_index[b]:
+                     result[b] += 1   
+    
+    answer = max(result.values())
+    
     return answer
