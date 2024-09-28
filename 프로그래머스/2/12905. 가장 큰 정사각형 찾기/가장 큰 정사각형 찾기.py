@@ -1,28 +1,28 @@
 def solution(board):
     answer = 0
+    
     height = len(board)
     width = len(board[0])
     
-    dp = [
-        [0 for _ in range(width)]
-        for _ in range(height)
-    ]
+    dp = [[0]*width for _ in range(height)]
     
-    # dp 배열의 첫 행과 열은 복붙
-    for i in range(width):
-        dp[0][i] = board[0][i]
-        answer = max(dp[0][i], answer)
-    for i in range(height):
-        dp[i][0] = board[i][0]
-        answer = max(dp[i][0], answer)
+    
+    #첫행열
+    for h in range(height):
+        dp[h][0] = board[h][0]
+        answer = max(answer, dp[h][0])
+    
+    for w in range(width):
+        dp[0][w] = board[0][w]
+        answer = max(answer, dp[0][w])
         
-    # dp 사용해서 계산
-    for m in range(1, height):
-        for n in range(1, width):
-            if board[m][n] == 1:
-                dp[m][n] = min(dp[m][n-1], dp[m-1][n], dp[m-1][n-1]) + 1
-                answer = max(dp[m][n], answer)
-                
+    # 나머지 계산
+    for h in range(1, height):
+        for w in range(1, width):
+            if board[h][w] == 1:
+                dp[h][w] = min(dp[h-1][w-1], dp[h][w-1], dp[h-1][w]) +1
+                answer = max(answer, dp[h][w])
+        
     answer = answer ** 2
 
     return answer
