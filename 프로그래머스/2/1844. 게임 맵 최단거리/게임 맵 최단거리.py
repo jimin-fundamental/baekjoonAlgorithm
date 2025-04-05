@@ -1,28 +1,40 @@
 from collections import deque
 
 def solution(maps):
-    n = len(maps) #행
-    m = len(maps[0]) #열
-    dx = [-1, 1, 0, 0] #상하좌우
-    dy = [0,0,-1,1]
+    n = len(maps)
+    m = len(maps[0])
     
-    queue = deque() # 방문해야 할 좌표
-    queue.append((0,0)) #시작점
-    visited = [[False] * m for _ in range(n)]
-    visited[0][0] = True
+    # 이동 방향: 상, 하, 좌, 우
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
     
+    # BFS를 위한 큐 초기화
+    queue = deque()
+    queue.append((0, 0))  # 시작점 (0,0)
+
     while queue:
-        x,y = queue.popleft() # 현재 위치
+        x, y = queue.popleft()
+        
+        # 현재 위치에서 4방향으로 이동
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
             
-            # 맵 범위 안에 있고, 벽이 아니고, 방문 안 했으면
-            if 0 <=nx < n and 0 <= ny < m and maps[nx][ny] ==1 and not visited[nx][ny]:
-                maps[nx][ny] = maps[x][y] + 1 # 이전 칸 + 1 (거리 저장)
-                visited[nx][ny] = True # 방문 처리
-                queue.append((nx,ny)) # 다음 탐색을 위해 큐에 추가
+            # 맵 범위 벗어나면 무시
+            if nx < 0 or ny < 0 or nx >= n or ny >= m:
+                continue
+            
+            # 벽이면 무시
+            if maps[nx][ny] == 0:
+                continue
+            
+            # 처음 가는 길이면 거리 저장 및 큐에 추가
+            if maps[nx][ny] == 1:
+                maps[nx][ny] = maps[x][y] + 1
+                queue.append((nx, ny))
+    
+    # 상대 팀 진영에 도착했는지 확인
     if maps[n-1][m-1] == 1:
-        return -1 #아직 도달X
+        return -1  # 도착 못함
     else:
         return maps[n-1][m-1]
