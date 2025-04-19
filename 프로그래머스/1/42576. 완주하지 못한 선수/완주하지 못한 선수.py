@@ -1,11 +1,13 @@
+
 def solution(participant, completion):
-    p = {}
-    for name in participant:
-        p[name] = p.get(name,0) +1
-    for name in completion:
-        p[name] -= 1
-    for name in p:
-        if p[name] >0 :
-            return name
-    
-            
+    hash_map = {}
+    for p in participant:
+        if p in hash_map:
+            hash_map[p] += 1
+        else:
+            hash_map[p] = 1
+    for c in completion:
+        hash_map[c] -= 1
+    for n in hash_map:
+        if hash_map[n] > 0:
+            return n
