@@ -1,10 +1,10 @@
 # [level 2] 기능개발 - 42586 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42586?language=cpp) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42586?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 4.17 MB, 시간: 0.02 ms
+메모리: 62.9 MB, 시간: 8.64 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 04월 09일 13:08:18
+2026년 04월 22일 16:16:37
 
 ### 문제 설명
 
