@@ -1,45 +1,44 @@
 class Solution {
-    
-    val answer = mutableListOf<Array<String>>()
-    
-    fun dfs(
-        route: MutableList<String>, 
-        tickets: List<Array<String>>, 
-        visited: BooleanArray
-    ){
-        // 종료조건
-        if(route.size - 1 == tickets.size){
-            answer.add(route.toTypedArray()) //StringArray로 바꾸려면 toTypedArray()
-            return
-        }
-        
-        // 종료되지 않았다면, 현재 cur와 연결된 다른 루트들 모두 추가
-        var cur = route[route.size - 1]
-        
-        for(i in tickets.indices){
-            if(tickets[i][0] == cur && !visited[i]){
-                route.add(tickets[i][1])
-                visited[i] = true
-                
-                dfs(route, tickets, visited) //여기서 return하면 뒤의 코드 실행 X
-                
-                visited[i] = false //백트래킹
-                route.removeAt(route.size - 1) // 백트래킹할 거면 route에서도 지워야 돼
-            }
-        }
-    }
-    
     fun solution(tickets: Array<Array<String>>): Array<String> {
-        val visited = BooleanArray(tickets.size)
+        val answer = mutableListOf<String>()
         
+        // 정렬
         val sorted = tickets.sortedWith(
             compareBy<Array<String>> {it[0]}.thenBy{it[1]}
         )
         
         val route = mutableListOf("ICN")
-
-        dfs(route, sorted, visited)
+        val visited = BooleanArray(tickets.size)
         
-        return answer[0]
+        fun dfs(route: MutableList<String>):MutableList<String>{
+            if(route.size == sorted.size +1){
+                for(r in route){
+                    answer.add(r)
+                }
+                return answer //여기에서 반환을 하는데 왜 answer에 계속 덧붙여지는 거지???
+            }
+            
+            val cur = route[route.size -1]
+            
+            //다음 경로 탐색
+            for(i in sorted.indices){
+                if(sorted[i][0] == cur && !visited[i]){
+                    route.add(sorted[i][1])
+                    visited[i] = true
+                    
+                    if (dfs(route).size == sorted.size +1){ //여기서도 반환을 해줘야되는구나!!
+                        return answer
+                    }
+                    
+                    // 그 경로가 맞지 않았다면
+                    route.removeAt(route.size -1)
+                    visited[i] = false
+                }
+            }
+            
+            return answer
+        }
+        
+        return dfs(route).toTypedArray()
     }
 }
