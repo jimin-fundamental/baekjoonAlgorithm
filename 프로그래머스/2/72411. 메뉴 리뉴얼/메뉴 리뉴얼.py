@@ -3,38 +3,27 @@ from itertools import combinations
 def solution(orders, course):
     answer = []
     
-    dic = dict()
-    
-    for order in orders:
-        n = len(order)
+    for n in course:
+        c = {}
         
-        for i in range(2, n+1): 
-            # 모든 조합에 대해
-            for comb in combinations(order, i):
-                s = ''.join(sorted(comb))
-                
-                # dic에 넣기 
-                dic[s] = dic.get(s, 0) + 1
-    
-    
-    for c in course:
-        candidate = []
+        # 각 조합 주문된 횟수 세기
+        for order in orders:
+            for comb in combinations(order, n):
+                s = ''.join(sorted(list(comb)))
+                c[s] = c.get(s, 0) + 1
         
-        # 2번 이상 추천받은 리스트업
-        for key, value in dic.items():
-            if len(key) == c and value >= 2:
-                candidate.append((value, key))
-                
-        # 최대로 추천받은 것 answer에 추가 
-        candidate.sort(reverse = True)
-        if len(candidate) > 0:
-            maxvalue = candidate[0][0]
-        print(candidate)
+        # 만약 c가 비어있으면 패스
+        if not c: 
+            continue
+            
+        # 최대 value인 key answer에 추가
+        max_value = max(c.values())
         
-        for i in range(len(candidate)):
-            if candidate[i][0] == maxvalue: 
-                answer.append(candidate[i][1])
-            else:
-                break    
+        if max_value < 2:
+            continue
+        
+        for key, value in c.items():
+            if value == max_value:
+                answer.append(key)
     
     return sorted(answer)
